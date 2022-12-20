@@ -170,3 +170,5 @@ TODO: придумать предполагаемый экономический
 ## Идеи
 
 - добавить дронов
+- internet of vehicles
+- internet of autonomous things

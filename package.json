@@ -25,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/emcpow2/civilization-of-machines/issues"
   },
-  "homepage": "https://github.com/emcpow2/civilization-of-machines#readme"
+  "homepage": "https://github.com/emcpow2/civilization-of-machines#readme",
+  "devDependencies": {
+    "hardhat": "^2.12.4"
+  }
 }

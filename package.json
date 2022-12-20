@@ -1,0 +1,29 @@
+{
+  "name": "civilization-of-machines",
+  "version": "1.0.0",
+  "description": "A repository with demonstration of Machine to Machine communications",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emcpow2/civilization-of-machines.git"
+  },
+  "keywords": [
+    "presentation",
+    "iot",
+    "blockchain",
+    "evm",
+    "hardhat"
+  ],
+  "author": "Eduard Iskandarov",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/emcpow2/civilization-of-machines/issues"
+  },
+  "homepage": "https://github.com/emcpow2/civilization-of-machines#readme"
+}

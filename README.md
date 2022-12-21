@@ -21,7 +21,7 @@ npx hardhat run scripts/deploy.ts
 - [Marp for VS Code](https://marketplace.visualstudio.com/items?itemName=marp-team.marp-vscode) - Редактор слайдов
 - [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker) - проверка синтаксиса
 - [Russian - Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker-russian)
-- [solidity](https://marketplace.visualstudio.com/items?itemName=JuanBlanco.solidity)
+- [Solidity](https://marketplace.visualstudio.com/items?itemName=NomicFoundation.hardhat-solidity)
 - [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
 
 ## Дорожная карта
@@ -45,7 +45,7 @@ gantt
 ## TODO
 
 - [ ] отправить заявку до в ГОЗНАК до 26 декабря 2022
-  Ссылка [Акселератор «Goznak Startup Lab»](https://accelerator.goznak.ru/)
+      Ссылка [Акселератор «Goznak Startup Lab»](https://accelerator.goznak.ru/)
 - [x] Сделать анкету проекта
 - [ ] Сделать презентацию проекта
 - [x] Сделать анализ конкурентов

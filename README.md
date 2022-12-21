@@ -50,3 +50,11 @@ gantt
 - [ ] Сделать презентацию проекта
 - [x] Сделать анализ конкурентов
 - [ ] Определить предполагаемый экономический эффект для ГОЗНАК
+
+## Useful links
+
+- [Deploying ENS on a Private Chain](https://docs.ens.domains/deploying-ens-on-a-private-chain)
+- [The Convergence Ecosystem in Mobility](https://outlierventures.io/wp-content/uploads/2019/05/ov0382convergenceinmobilitys1-180911161035.pdf)
+- [Автомобиль, Интернет вещей и прочие технологии](https://habr.com/ru/company/unet/blog/371207/)
+- [Что такое «умные» дороги и как будет выглядеть цифровой транспорт](https://trends.rbc.ru/trends/industry/5ef0c7849a7947bad518dfb5)
+- [NFTs, blockchain, AI, drones and autonomous vehicles key to more resilient supply chains](https://www.rmit.edu.au/news/all-news/2022/may/digital-cbd-report-3)

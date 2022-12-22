@@ -10,20 +10,19 @@ describe("ENS", () => {
 
   it("Should resolve address", async () => {
     const domain = "random.eth";
-    const firstAccount = provider.getSigner(0);    
+    const firstAccount = provider.getSigner(0);
     const firstAccountAddress = await firstAccount.getAddress();
     await ensMock.setDomainOwner(domain, firstAccountAddress);
-    
+
     // We will use the second account as a target domain address
     const secondAccount = provider.getSigner(1);
     const secondAccountAddress = await secondAccount.getAddress();
 
     const ens = new ethers.Contract(ENS_REGISTRY_ADDRESS, ENS_ABI, provider);
 
-    
     const Resolver = await ethers.getContractFactory("OwnedResolver");
     const resolver = await Resolver.connect(firstAccount).deploy();
-    
+
     const node = namehash(domain);
     await ens.connect(firstAccount).setResolver(node, resolver.address);
     await resolver.functions["setAddr(bytes32,address)"](

@@ -60,3 +60,4 @@ gantt
 - [NFTs, blockchain, AI, drones and autonomous vehicles key to more resilient supply chains](https://www.rmit.edu.au/news/all-news/2022/may/digital-cbd-report-3)
 - [Spend ERC-20 Create ERC-721](https://github.com/fulldecent/spend-ERC20-create-ERC721)
 - [Is this possible to pay for ERC721 token with ERC20 token not ETH?](https://ethereum.stackexchange.com/questions/112301/is-this-possible-to-pay-for-erc721-token-with-erc20-token-not-eth)
+- [A Long Way To Go: On Gasless Tokens and ERC20-Permit](https://soliditydeveloper.com/erc20-permit)

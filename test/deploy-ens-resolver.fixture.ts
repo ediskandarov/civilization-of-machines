@@ -1,10 +1,17 @@
 import { ethers, ensMock } from "hardhat";
 import { isAddress } from "@ethersproject/address";
 import { namehash } from "@ethersproject/hash";
+import { ENS_REGISTRY_ADDRESS } from "hardhat-ens-mock/dist/src/constants";
 
 export async function deployEnsResolverFixture() {
+  // Workaround for ethers network issue
+  ethers.provider._networkPromise.then(
+    (network) => (network.ensAddress = ENS_REGISTRY_ADDRESS),
+  );
+
   const { provider } = ethers;
-  const ensAddress = provider.network.ensAddress!;
+  // const ensAddress = provider.network.ensAddress!;
+  const ensAddress = ENS_REGISTRY_ADDRESS;
   const ENS_ABI = require("../abi/ENS.json");
 
   // The first address is reserved for ENS

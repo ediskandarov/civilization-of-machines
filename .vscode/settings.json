@@ -12,5 +12,11 @@
     "смарт",
     "токенизации",
     "ЦВЦБ"
-  ]
+  ],
+  "prettier.configPath": ".prettierrc.json",
+  "prettier.enable": true,
+  "prettier.requireConfig": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": false
 }

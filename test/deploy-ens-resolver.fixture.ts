@@ -1,5 +1,5 @@
 import { ethers, ensMock } from "hardhat";
-import { getAddress, isAddress } from "@ethersproject/address";
+import { isAddress } from "@ethersproject/address";
 import { namehash } from "@ethersproject/hash";
 
 export async function deployEnsResolverFixture() {
@@ -20,7 +20,8 @@ export async function deployEnsResolverFixture() {
     ens,
     resolver,
     setAddress: async (domain: string, address: string) => {
-      if (!isAddress(address)) throw new Error(`${address} is not a valid address`);
+      if (!isAddress(address))
+        throw new Error(`${address} is not a valid address`);
 
       const node = namehash(domain);
       // Set domain owner and domain resolver
@@ -32,7 +33,11 @@ export async function deployEnsResolverFixture() {
       // await ensMock.setDomainResolver(domain, resolver.address);
       await ens.connect(firstAccount).setResolver(node, resolver.address);
 
-      await resolver.functions['setAddr(bytes32,address)'](node, address)
+      await resolver.functions["setAddr(bytes32,address)"](node, address);
     },
-  }
+  };
 }
+
+export type setAddressFunc = Awaited<
+  ReturnType<typeof deployEnsResolverFixture>
+>["setAddress"];

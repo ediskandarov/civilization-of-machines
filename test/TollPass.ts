@@ -1,7 +1,5 @@
 import { ethers } from "hardhat";
-import { assert } from "chai";
-import { getAddress } from "@ethersproject/address";
-// import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
+import { expect } from "chai";
 import {
   deployEnsResolverFixture,
   setAddressFunc,
@@ -29,12 +27,28 @@ describe("TollPass", () => {
     const tollPass = await TollPass.connect(tollPassOwnerAccount).deploy();
 
     const vehicleAddress = await ethers.provider.resolveName("random.eth");
-    if (!vehicleAddress) assert(false, "Resolved address returned null");
+    if (!vehicleAddress) {
+      return expect(false, "Resolved address returned null").to.be.true;
+    }
 
     // @todo double check on metadata URI
-    const tokenId = await tollPass.sendItem(
+    const { value: tokenId } = await tollPass.sendItem(
       vehicleAddress,
       "https://example.com/toll-pass/metadata",
     );
+
+    // Test that token owner is the same as set in `sendItem`
+    const tokenOwner = await tollPass.ownerOf(tokenId);
+    expect(tokenOwner).to.be.equal(vehicleAddress);
+
+    // Test enumerable extension
+    // This case is useful to check token details
+    const totalTokens = await tollPass.balanceOf(vehicleAddress);
+    expect(totalTokens.toNumber()).to.be.equal(1);
+    const vehicleTokenAt0 = await tollPass.tokenOfOwnerByIndex(
+      vehicleAddress,
+      0,
+    );
+    expect(vehicleTokenAt0).to.be.equal(tokenId);
   });
 });

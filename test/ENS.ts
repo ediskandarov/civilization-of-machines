@@ -2,11 +2,11 @@ import { ethers, ensMock } from "hardhat";
 import { assert } from "chai";
 import { namehash } from "@ethersproject/hash";
 import { getAddress } from "@ethersproject/address";
-import { ENS_REGISTRY_ADDRESS } from "hardhat-ens-mock/dist/src/constants";
 
 describe("ENS", () => {
   const ENS_ABI = require("../abi/ENS.json");
   const { provider } = ethers;
+  const ensAddress = provider.network.ensAddress!;
 
   it("Should resolve address", async () => {
     const domain = "random.eth";
@@ -18,7 +18,7 @@ describe("ENS", () => {
     const secondAccount = provider.getSigner(1);
     const secondAccountAddress = await secondAccount.getAddress();
 
-    const ens = new ethers.Contract(ENS_REGISTRY_ADDRESS, ENS_ABI, provider);
+    const ens = new ethers.Contract(ensAddress, ENS_ABI, provider);
 
     const Resolver = await ethers.getContractFactory("OwnedResolver");
     const resolver = await Resolver.connect(firstAccount).deploy();

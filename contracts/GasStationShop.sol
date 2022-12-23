@@ -2,11 +2,12 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/utils/math/SafeCast.sol";
+import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 
 import {RUBXToken} from "./RUBXToken.sol";
 import {GasStationSKU} from "./GasStationSKU.sol";
 
-contract GasStationShop {
+contract GasStationShop is ERC1155Holder {
   RUBXToken _rubxToken;
   GasStationSKU _gasStationSKU;
 

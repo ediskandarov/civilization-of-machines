@@ -2,24 +2,22 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract TollPass is ERC721, ERC721Enumerable, ERC721URIStorage {
+contract TollPass is ERC721, ERC721Enumerable {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
 
   constructor() ERC721("TollPass", "TOP") {}
 
-  function sendItem(
-    address vehicle,
-    string memory newTokenURI
-  ) public returns (uint256) {
+  function _baseURI() internal pure override returns (string memory) {
+    return "https://nft.goznak.ru/metadata/";
+  }
+
+  function sendItem(address vehicle) public returns (uint256) {
     uint256 newItemId = _tokenIds.current();
     _mint(vehicle, newItemId);
-    _setTokenURI(newItemId, newTokenURI);
-
     _tokenIds.increment();
     return newItemId;
   }
@@ -34,16 +32,6 @@ contract TollPass is ERC721, ERC721Enumerable, ERC721URIStorage {
     uint256 batchSize
   ) internal override(ERC721, ERC721Enumerable) {
     super._beforeTokenTransfer(from, to, tokenId, batchSize);
-  }
-
-  function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
-    super._burn(tokenId);
-  }
-
-  function tokenURI(
-    uint256 tokenId
-  ) public view override(ERC721, ERC721URIStorage) returns (string memory) {
-    return super.tokenURI(tokenId);
   }
 
   function supportsInterface(

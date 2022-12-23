@@ -28,9 +28,7 @@ contract TollPassShop {
     _rubxToken.permit(vehicle, shop, value, deadline, v, r, s);
     _rubxToken.transferFrom(vehicle, shop, value);
 
-    // @todo fix token URI
-    string memory tollPassTokenURI = "https://example.com/1";
-    uint tokenId = _tollPass.sendItem(vehicle, tollPassTokenURI);
+    uint tokenId = _tollPass.sendItem(vehicle);
 
     return tokenId;
   }

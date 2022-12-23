@@ -32,10 +32,7 @@ describe("TollPass", () => {
     }
 
     // @todo double check on metadata URI
-    const { value: tokenId } = await tollPass.sendItem(
-      vehicleAddress,
-      "https://example.com/toll-pass/metadata",
-    );
+    const { value: tokenId } = await tollPass.sendItem(vehicleAddress);
 
     // Test that token owner is the same as set in `sendItem`
     const tokenOwner = await tollPass.ownerOf(tokenId);

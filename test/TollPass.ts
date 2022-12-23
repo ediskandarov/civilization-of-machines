@@ -38,6 +38,11 @@ describe("TollPass", () => {
     const tokenOwner = await tollPass.ownerOf(tokenId);
     expect(tokenOwner).to.be.equal(vehicleAddress);
 
+    // Test metadata URI
+    expect(await tollPass.tokenURI(tokenId)).to.be.equal(
+      `https://nft.goznak.ru/metadata/${tokenId.toString()}`,
+    );
+
     // Test enumerable extension
     // This case is useful to check token details
     const totalTokens = await tollPass.balanceOf(vehicleAddress);

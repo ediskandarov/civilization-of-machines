@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract GasStationSKU is ERC1155, Ownable {
+contract FuelStationSKU is ERC1155, Ownable {
   // Sample token ids
   uint256 public constant AI_92_K5 = 0;
   uint256 public constant AI_95_K5 = 1;

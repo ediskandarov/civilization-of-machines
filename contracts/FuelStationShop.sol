@@ -5,33 +5,33 @@ import "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 
 import {RUBXToken} from "./RUBXToken.sol";
-import {GasStationSKU} from "./GasStationSKU.sol";
+import {FuelStationSKU} from "./FuelStationSKU.sol";
 
-contract GasStationShop is ERC1155Holder {
+contract FuelStationShop is ERC1155Holder {
   RUBXToken _rubxToken;
-  GasStationSKU _gasStationSKU;
+  FuelStationSKU _fuelStationSKU;
 
-  constructor(RUBXToken rubxToken, GasStationSKU gasStationSKU) {
+  constructor(RUBXToken rubxToken, FuelStationSKU gasStationSKU) {
     _rubxToken = rubxToken;
-    _gasStationSKU = gasStationSKU;
+    _fuelStationSKU = gasStationSKU;
   }
 
-  function getGasPrice(
-    uint256 gasSkuTokenId
+  function getFuelPrice(
+    uint256 fuelSkuTokenId
   ) public view returns (int64 price) {
-    if (gasSkuTokenId == _gasStationSKU.AI_92_K5()) {
+    if (fuelSkuTokenId == _fuelStationSKU.AI_92_K5()) {
       return 45_00;
-    } else if (gasSkuTokenId == _gasStationSKU.AI_95_K5()) {
+    } else if (fuelSkuTokenId == _fuelStationSKU.AI_95_K5()) {
       return 50_00;
-    } else if (gasSkuTokenId == _gasStationSKU.DIESEL()) {
+    } else if (fuelSkuTokenId == _fuelStationSKU.DIESEL()) {
       return 55_00;
     } else {
       return -1;
     }
   }
 
-  function purchaseGas(
-    uint256 gasSkuTokenId,
+  function purchaseFuel(
+    uint256 fuelSkuTokenId,
     // the following arguments are required for permit to work
     // @todo simplify, by removing addresses that we can get in runtime
     address vehicle,
@@ -50,15 +50,15 @@ contract GasStationShop is ERC1155Holder {
     _rubxToken.transferFrom(vehicle, shop, value);
 
     // transfer gas
-    int64 gasPrice = getGasPrice(gasSkuTokenId);
+    int64 gasPrice = getFuelPrice(fuelSkuTokenId);
     require(gasPrice > 0, "Invalid gas price");
 
-    uint256 gasAmount = value / SafeCast.toUint256(gasPrice);
-    _gasStationSKU.safeTransferFrom(
+    uint256 fuelAmount = value / SafeCast.toUint256(gasPrice);
+    _fuelStationSKU.safeTransferFrom(
       address(this),
       vehicle,
-      gasSkuTokenId,
-      gasAmount,
+      fuelSkuTokenId,
+      fuelAmount,
       "0x0"
     );
   }

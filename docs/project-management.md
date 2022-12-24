@@ -2,10 +2,12 @@
 
 ```mermaid
 gantt
+    title       Отправить проект в ГОЗНАК акселератор
     dateFormat  YYYY-MM-DD
     axisFormat  %a
-    tickInterval 1day
-    title       Отправить проект в ГОЗНАК акселератор
+
+    %% GitHub raises an error if tick interval is set
+    %% tickInterval 1day
 
     section Презентация
     Заполнить анкету          :done,    des1, 2022-12-20, 1d

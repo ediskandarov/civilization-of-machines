@@ -23,17 +23,16 @@ describe("ENS", () => {
     const domain = "random.eth";
 
     // We will use the second account as a target domain address
-    const secondAccount = ethers.provider.getSigner(1);
-    const secondAccountAddress = await secondAccount.getAddress();
+    const [, account] = await ethers.getSigners();
 
-    await setAddress(domain, secondAccountAddress);
+    await setAddress(domain, account.address);
 
     const resolvedAddress = await ethers.provider.resolveName(domain);
 
     if (!resolvedAddress) assert(false, "Resolved address returned null");
 
     assert.strictEqual(
-      getAddress(secondAccountAddress),
+      getAddress(account.address),
       getAddress(resolvedAddress),
     );
   });
@@ -43,18 +42,17 @@ describe("ENS", () => {
 
     const domain = "random-2.eth";
 
-    // We will use the second account as a target domain address
-    const secondAccount = ethers.provider.getSigner(3);
-    const secondAccountAddress = await secondAccount.getAddress();
+    // We will use the third account as a target domain address
+    const [, , account] = await ethers.getSigners();
 
-    await setAddress(domain, secondAccountAddress);
+    await setAddress(domain, account.address);
 
     const resolvedAddress = await ethers.provider.resolveName(domain);
 
     if (!resolvedAddress) assert(false, "Resolved address returned null");
 
     assert.strictEqual(
-      getAddress(secondAccountAddress),
+      getAddress(account.address),
       getAddress(resolvedAddress),
     );
   });

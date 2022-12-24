@@ -18,10 +18,9 @@ describe("TollPass", () => {
     const plateNumberDomain = `${plateNumber}.eth`;
 
     // We will use the first account as owner for TollPass contract
-    const tollPassOwnerAccount = ethers.provider.getSigner(0);
-    const vehicleAccount = ethers.provider.getSigner(1);
+    const [tollPassOwnerAccount, vehicleAccount] = await ethers.getSigners();
 
-    await setAddress(plateNumberDomain, await vehicleAccount.getAddress());
+    await setAddress(plateNumberDomain, vehicleAccount.address);
 
     const TollPass = await ethers.getContractFactory("TollPass");
     const tollPass = await TollPass.connect(tollPassOwnerAccount).deploy();

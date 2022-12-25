@@ -1,3 +1,9 @@
+/**
+ * @file Тест ENS инфраструктуры. Проверяем корректность работы.
+ * Рабочая ENS нужна в смежных тестах.
+ * 
+ * @author Искандаров Эдуард
+ */
 import { ethers } from "hardhat";
 import { assert } from "chai";
 import { getAddress } from "@ethersproject/address";
@@ -17,7 +23,7 @@ describe("ENS", () => {
 
   it("Should resolve address", async () => {
     // @todo file a ticket to hardhat
-    // somehow loadFixture breaks ethers.provider.network
+    // somehow loadFixture breaks `ethers.provider.network`
     // const { setAddress } = await loadFixture(deployEnsResolverFixture)
 
     const domain = "random.eth";

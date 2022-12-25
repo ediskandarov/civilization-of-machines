@@ -1,3 +1,8 @@
+/**
+ * @file Вспомогательный файл для разворачивания ENS инфраструктуры.
+ * 
+ * @author Искандаров Эдуард
+ */
 import { ethers, ensMock } from "hardhat";
 import { isAddress } from "@ethersproject/address";
 import { namehash } from "@ethersproject/hash";

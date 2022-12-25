@@ -5,21 +5,21 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract TollPass is ERC721, ERC721Enumerable {
+contract TollTicket is ERC721, ERC721Enumerable {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
 
-  constructor() ERC721("TollPass", "TOP") {}
+  constructor() ERC721("TollTicket", "TTK") {}
 
   function _baseURI() internal pure override returns (string memory) {
     return "https://nft.goznak.ru/metadata/";
   }
 
-  function sendItem(address vehicle) public returns (uint256) {
-    uint256 newItemId = _tokenIds.current();
-    _mint(vehicle, newItemId);
+  function sendTicket(address vehicle) public returns (uint256) {
+    uint256 newTicketId = _tokenIds.current();
+    _mint(vehicle, newTicketId);
     _tokenIds.increment();
-    return newItemId;
+    return newTicketId;
   }
 
   // The following functions are overrides required by Solidity.

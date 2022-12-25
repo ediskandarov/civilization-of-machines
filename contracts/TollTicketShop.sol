@@ -2,18 +2,18 @@
 pragma solidity ^0.8.9;
 
 import {RUBXToken} from "./RUBXToken.sol";
-import {TollPass} from "./TollPass.sol";
+import {TollTicket} from "./TollTicket.sol";
 
-contract TollPassShop {
+contract TollTicketShop {
   RUBXToken _rubxToken;
-  TollPass _tollPass;
+  TollTicket _tollTicket;
 
-  constructor(RUBXToken rubxToken, TollPass tollPass) {
+  constructor(RUBXToken rubxToken, TollTicket tollTicket) {
     _rubxToken = rubxToken;
-    _tollPass = tollPass;
+    _tollTicket = tollTicket;
   }
 
-  function purchaseTollPass(
+  function purchaseTollTicket(
     address vehicle,
     address shop,
     uint256 value,
@@ -28,7 +28,7 @@ contract TollPassShop {
     _rubxToken.permit(vehicle, shop, value, deadline, v, r, s);
     _rubxToken.transferFrom(vehicle, shop, value);
 
-    uint tokenId = _tollPass.sendItem(vehicle);
+    uint tokenId = _tollTicket.sendTicket(vehicle);
 
     return tokenId;
   }

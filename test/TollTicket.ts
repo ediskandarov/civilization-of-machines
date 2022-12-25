@@ -5,7 +5,7 @@ import {
   setAddressFunc,
 } from "./deploy-ens-resolver.fixture";
 
-describe("TollPass", () => {
+describe("TollTicket", () => {
   let setAddress: setAddressFunc;
 
   beforeEach(async () => {
@@ -22,8 +22,8 @@ describe("TollPass", () => {
 
     await setAddress(plateNumberDomain, vehicleAccount.address);
 
-    const TollPass = await ethers.getContractFactory("TollPass");
-    const tollPass = await TollPass.connect(tollPassOwnerAccount).deploy();
+    const TollTicket = await ethers.getContractFactory("TollTicket");
+    const tollTicket = await TollTicket.connect(tollPassOwnerAccount).deploy();
 
     const vehicleAddress = await ethers.provider.resolveName("random.eth");
     if (!vehicleAddress) {
@@ -31,22 +31,22 @@ describe("TollPass", () => {
     }
 
     // @todo double check on metadata URI
-    const { value: tokenId } = await tollPass.sendItem(vehicleAddress);
+    const { value: tokenId } = await tollTicket.sendTicket(vehicleAddress);
 
     // Test that token owner is the same as set in `sendItem`
-    const tokenOwner = await tollPass.ownerOf(tokenId);
+    const tokenOwner = await tollTicket.ownerOf(tokenId);
     expect(tokenOwner).to.be.equal(vehicleAddress);
 
     // Test metadata URI
-    expect(await tollPass.tokenURI(tokenId)).to.be.equal(
+    expect(await tollTicket.tokenURI(tokenId)).to.be.equal(
       `https://nft.goznak.ru/metadata/${tokenId.toString()}`,
     );
 
     // Test enumerable extension
     // This case is useful to check token details
-    const totalTokens = await tollPass.balanceOf(vehicleAddress);
+    const totalTokens = await tollTicket.balanceOf(vehicleAddress);
     expect(totalTokens.toNumber()).to.be.equal(1);
-    const vehicleTokenAt0 = await tollPass.tokenOfOwnerByIndex(
+    const vehicleTokenAt0 = await tollTicket.tokenOfOwnerByIndex(
       vehicleAddress,
       0,
     );

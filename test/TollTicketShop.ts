@@ -2,8 +2,8 @@ import { ethers } from "hardhat";
 import { signERC2612Permit } from "eth-permit";
 import { expect } from "chai";
 
-describe("TollPassShop", () => {
-  it("should allow purchasing toll pass", async () => {
+describe("TollTicketShop", () => {
+  it("should allow purchasing toll ticket", async () => {
     const [rubxTokenOwner, tollPassOwner, tollPassShopOwner, alice] =
       await ethers.getSigners();
 
@@ -12,13 +12,13 @@ describe("TollPassShop", () => {
       100_000_00,
     );
 
-    const TollPass = await ethers.getContractFactory("TollPass");
-    const tollPass = await TollPass.connect(tollPassOwner).deploy();
+    const TollTicket = await ethers.getContractFactory("TollTicket");
+    const tollTicket = await TollTicket.connect(tollPassOwner).deploy();
 
-    const TollPassShop = await ethers.getContractFactory("TollPassShop");
-    const tollPassShop = await TollPassShop.connect(tollPassShopOwner).deploy(
+    const TollTicketShop = await ethers.getContractFactory("TollTicketShop");
+    const tollTicketShop = await TollTicketShop.connect(tollPassShopOwner).deploy(
       rubxToken.address,
-      tollPass.address,
+      tollTicket.address,
     );
 
     // Transfer 10 000 RUBX to Alice
@@ -30,17 +30,17 @@ describe("TollPassShop", () => {
       ethers.provider,
       rubxToken.address,
       alice.address,
-      tollPassShop.address,
+      tollTicketShop.address,
       tollPassPrice,
     );
 
     expect(permit).not.to.be.undefined;
 
-    const purchaseResult = await tollPassShop
+    const purchaseResult = await tollTicketShop
       .connect(alice)
-      .purchaseTollPass(
+      .purchaseTollTicket(
         alice.address,
-        tollPassShop.address,
+        tollTicketShop.address,
         tollPassPrice,
         permit.deadline,
         permit.v,
@@ -53,13 +53,13 @@ describe("TollPassShop", () => {
     expect(await rubxToken.balanceOf(alice.address)).to.be.equal(9_800_00);
 
     // Shop received tokens
-    expect(await rubxToken.balanceOf(tollPassShop.address)).to.be.equal(200_00);
+    expect(await rubxToken.balanceOf(tollTicketShop.address)).to.be.equal(200_00);
 
     // Check toll pass exists on Alice's account
-    expect(await tollPass.balanceOf(alice.address)).to.be.equal(1);
+    expect(await tollTicket.balanceOf(alice.address)).to.be.equal(1);
 
     // We checked that toll pass contract has registered the token for Alice
     const { value: tollPassTokenId } = purchaseResult;
-    expect(await tollPass.ownerOf(tollPassTokenId)).to.be.equal(alice.address);
+    expect(await tollTicket.ownerOf(tollPassTokenId)).to.be.equal(alice.address);
   });
 });

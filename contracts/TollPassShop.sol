@@ -33,3 +33,6 @@ contract TollPassShop {
     return tokenId;
   }
 }
+
+// passToll
+//комментарии по русски в тестах и методах

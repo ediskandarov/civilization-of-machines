@@ -5,25 +5,25 @@ import "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 
 import {RUBXToken} from "./RUBXToken.sol";
-import {FuelStationSKU} from "./FuelStationSKU.sol";
+import {FuelRegistry} from "./FuelRegistry.sol";
 
 contract FuelStationShop is ERC1155Holder {
   RUBXToken _rubxToken;
-  FuelStationSKU _fuelStationSKU;
+  FuelRegistry _fuelRegistry;
 
-  constructor(RUBXToken rubxToken, FuelStationSKU gasStationSKU) {
+  constructor(RUBXToken rubxToken, FuelRegistry fuelRegistry) {
     _rubxToken = rubxToken;
-    _fuelStationSKU = gasStationSKU;
+    _fuelRegistry = fuelRegistry;
   }
 
   function getFuelPrice(
     uint256 fuelSkuTokenId
   ) public view returns (int64 price) {
-    if (fuelSkuTokenId == _fuelStationSKU.AI_92_K5()) {
+    if (fuelSkuTokenId == _fuelRegistry.AI_92_K5()) {
       return 45_00;
-    } else if (fuelSkuTokenId == _fuelStationSKU.AI_95_K5()) {
+    } else if (fuelSkuTokenId == _fuelRegistry.AI_95_K5()) {
       return 50_00;
-    } else if (fuelSkuTokenId == _fuelStationSKU.DIESEL()) {
+    } else if (fuelSkuTokenId == _fuelRegistry.DIESEL()) {
       return 55_00;
     } else {
       return -1;
@@ -54,7 +54,7 @@ contract FuelStationShop is ERC1155Holder {
     require(gasPrice > 0, "Invalid gas price");
 
     uint256 fuelAmount = value / SafeCast.toUint256(gasPrice);
-    _fuelStationSKU.safeTransferFrom(
+    _fuelRegistry.safeTransferFrom(
       address(this),
       vehicle,
       fuelSkuTokenId,

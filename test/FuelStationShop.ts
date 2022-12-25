@@ -10,34 +10,35 @@ describe("FuelStationShop", () => {
     const RUBXToken = await ethers.getContractFactory("RUBXToken");
     const rubxToken = await RUBXToken.connect(cbrAccount).deploy(1_000_000_00);
 
-    const FuelStationSKU = await ethers.getContractFactory("FuelStationSKU");
-    const fuelStationSKU = await FuelStationSKU.connect(
+    const FuelRegistry = await ethers.getContractFactory("FuelRegistry");
+    const fuelRegistry = await FuelRegistry.connect(
       fuelStationShopAccount,
     ).deploy();
 
     const FuelStationShop = await ethers.getContractFactory("FuelStationShop");
     const fuelStationShop = await FuelStationShop.connect(
       fuelStationShopAccount,
-    ).deploy(rubxToken.address, fuelStationSKU.address);
+    ).deploy(rubxToken.address, fuelRegistry.address);
 
     // Transfer 10 000 RUB to consumer vehicle
     await rubxToken.transfer(consumerVehicleAccount.address, 10_000_00);
 
     // Fill gas station with 100 000 liters of diesel
-    await fuelStationSKU.mint(
+    await fuelRegistry.mint(
       fuelStationShop.address,
-      fuelStationSKU.DIESEL(),
+      fuelRegistry.DIESEL(),
       100_000,
       [],
     );
 
     expect(
-      await fuelStationSKU.balanceOf(
+      await fuelRegistry.balanceOf(
         fuelStationShop.address,
-        fuelStationSKU.DIESEL(),
+        fuelRegistry.DIESEL(),
       ),
     ).to.be.equal(100_000);
 
+    // purchase flow
     const permit = await signERC2612Permit(
       ethers.provider,
       rubxToken.address,
@@ -48,7 +49,7 @@ describe("FuelStationShop", () => {
     await fuelStationShop
       .connect(consumerVehicleAccount)
       .purchaseFuel(
-        fuelStationSKU.DIESEL(),
+        fuelRegistry.DIESEL(),
         consumerVehicleAccount.address,
         fuelStationShop.address,
         1_000_00,
@@ -64,9 +65,9 @@ describe("FuelStationShop", () => {
     ).to.be.equal(9_000_00);
 
     expect(
-      await fuelStationSKU.balanceOf(
+      await fuelRegistry.balanceOf(
         consumerVehicleAccount.address,
-        fuelStationSKU.DIESEL(),
+        fuelRegistry.DIESEL(),
       ),
     ).to.be.equal(18);
 
@@ -76,9 +77,9 @@ describe("FuelStationShop", () => {
     );
 
     expect(
-      await fuelStationSKU.balanceOf(
+      await fuelRegistry.balanceOf(
         fuelStationShop.address,
-        fuelStationSKU.DIESEL(),
+        fuelRegistry.DIESEL(),
       ),
     ).to.be.equal(99_982);
   });

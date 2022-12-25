@@ -2,7 +2,7 @@ import { ethers } from "hardhat";
 import { signERC2612Permit } from "eth-permit";
 import { expect } from "chai";
 
-describe("FuelStationShop", () => {
+describe("FuelStation", () => {
   it("Should be able to purchase fuel", async () => {
     const [cbrAccount, fuelStationShopAccount, consumerVehicleAccount] =
       await ethers.getSigners();
@@ -15,8 +15,8 @@ describe("FuelStationShop", () => {
       fuelStationShopAccount,
     ).deploy();
 
-    const FuelStationShop = await ethers.getContractFactory("FuelStationShop");
-    const fuelStationShop = await FuelStationShop.connect(
+    const FuelStation = await ethers.getContractFactory("FuelStation");
+    const fuelStation = await FuelStation.connect(
       fuelStationShopAccount,
     ).deploy(rubxToken.address, fuelRegistry.address);
 
@@ -25,7 +25,7 @@ describe("FuelStationShop", () => {
 
     // Fill gas station with 100 000 liters of diesel
     await fuelRegistry.mint(
-      fuelStationShop.address,
+      fuelStation.address,
       fuelRegistry.DIESEL(),
       100_000,
       [],
@@ -33,7 +33,7 @@ describe("FuelStationShop", () => {
 
     expect(
       await fuelRegistry.balanceOf(
-        fuelStationShop.address,
+        fuelStation.address,
         fuelRegistry.DIESEL(),
       ),
     ).to.be.equal(100_000);
@@ -43,15 +43,15 @@ describe("FuelStationShop", () => {
       ethers.provider,
       rubxToken.address,
       consumerVehicleAccount.address,
-      fuelStationShop.address,
+      fuelStation.address,
       1_000_00,
     );
-    await fuelStationShop
+    await fuelStation
       .connect(consumerVehicleAccount)
       .purchaseFuel(
         fuelRegistry.DIESEL(),
         consumerVehicleAccount.address,
-        fuelStationShop.address,
+        fuelStation.address,
         1_000_00,
         permit.deadline,
         permit.v,
@@ -72,13 +72,13 @@ describe("FuelStationShop", () => {
     ).to.be.equal(18);
 
     // Gas station should receive RUBX tokens and spend diesel tokens
-    expect(await rubxToken.balanceOf(fuelStationShop.address)).to.be.equal(
+    expect(await rubxToken.balanceOf(fuelStation.address)).to.be.equal(
       1_000_00,
     );
 
     expect(
       await fuelRegistry.balanceOf(
-        fuelStationShop.address,
+        fuelStation.address,
         fuelRegistry.DIESEL(),
       ),
     ).to.be.equal(99_982);

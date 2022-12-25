@@ -20,7 +20,7 @@ describe("FuelStation", () => {
 
     // Разместим в тестовую сеть смарт контракт `RUBXToken`.
     const RUBXToken = await ethers.getContractFactory("RUBXToken");
-    const rubxToken = await RUBXToken.connect(cbrAccount).deploy(1_000_000_00);
+    const rubxToken = await RUBXToken.connect(cbrAccount).deploy(1_000_000_00); // Эмиссий 1 млн. рублей
 
     // Разместим в тестовую сеть смарт контракт `FuelRegistry`.
     const FuelRegistry = await ethers.getContractFactory("FuelRegistry");

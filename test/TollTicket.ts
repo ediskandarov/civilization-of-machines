@@ -1,3 +1,8 @@
+/**
+ * @file Тесты и примеры использования NFT билета за проезд.
+ *
+ * @author Искандаров Эдуард
+ */
 import { ethers } from "hardhat";
 import { expect } from "chai";
 import {
@@ -6,48 +11,63 @@ import {
 } from "./deploy-ens-resolver.fixture";
 
 describe("TollTicket", () => {
+  // `setAddress` - функция для регистрации домена в ENS.
   let setAddress: setAddressFunc;
 
   beforeEach(async () => {
+    // Перед запуском каждого сценария теста, разворачиваем ENS инфраструктуру.
     const ensItems = await deployEnsResolverFixture();
     setAddress = ensItems.setAddress;
   });
 
-  it("Should give toll pass to vehicle", async () => {
+  it("Should give toll ticket to vehicle", async () => {
+    /**
+     * Определим блокчейн аккаунты для цифровых двойников
+     * - авторизованный аккаунт для выпуска билетов
+     * - автомобиль
+     */
+    const [tollTicketAccount, vehicleAccount] = await ethers.getSigners();
+
+    // Разместим в тестовую сеть смарт контракт `TollTicket`.
+    const TollTicket = await ethers.getContractFactory("TollTicket");
+    const tollTicket = await TollTicket.connect(tollTicketAccount).deploy();
+
+    // Зададим тестовый номер автомобиля и соответствующий ему ENS домен.
     const plateNumber = "A592CY02RUS";
-    const plateNumberDomain = `${plateNumber}.eth`;
+    const plateNumberDomain = `${plateNumber}.gibdd`;
 
-    // We will use the first account as owner for TollPass contract
-    const [tollPassOwnerAccount, vehicleAccount] = await ethers.getSigners();
-
+    // Регистрируем домен номера автомобиля в ENS.
     await setAddress(plateNumberDomain, vehicleAccount.address);
 
-    const TollTicket = await ethers.getContractFactory("TollTicket");
-    const tollTicket = await TollTicket.connect(tollPassOwnerAccount).deploy();
+    // Для целей тестирования минуя оплату,
+    // отправим токен билета на проезд на аккаунт автомобиля.
+    const { value: tokenId } = await tollTicket.sendTicket(
+      vehicleAccount.address,
+    );
 
-    const vehicleAddress = await ethers.provider.resolveName("random.eth");
-    if (!vehicleAddress) {
-      return expect(false, "Resolved address returned null").to.be.true;
-    }
+    // Убедимся, что крипто адрес автомобиля определяется по регистрационному ТС.
+    // Такую же операцию проводит программное обеспечение КПП.
+    const resolvedVehicleAddress = await ethers.provider.resolveName(
+      plateNumberDomain,
+    );
 
-    // @todo double check on metadata URI
-    const { value: tokenId } = await tollTicket.sendTicket(vehicleAddress);
+    // Убедимся, что адрес владельца токена и адрес на который указывает домен - один и тот же.
+    expect(await tollTicket.ownerOf(tokenId)).to.be.equal(
+      resolvedVehicleAddress,
+    );
 
-    // Test that token owner is the same as set in `sendItem`
-    const tokenOwner = await tollTicket.ownerOf(tokenId);
-    expect(tokenOwner).to.be.equal(vehicleAddress);
-
-    // Test metadata URI
+    // Проверим, что ссылка на метаданные токена соответствует шаблону.
     expect(await tollTicket.tokenURI(tokenId)).to.be.equal(
       `https://nft.goznak.ru/toll-ticket/metadata/${tokenId.toString()}`,
     );
 
-    // Test enumerable extension
-    // This case is useful to check token details
-    const totalTokens = await tollTicket.balanceOf(vehicleAddress);
-    expect(totalTokens.toNumber()).to.be.equal(1);
+    // Проверки `ERC721Enumerable` дополнения.
+    // Количество билетов на балансе аккаунте автомобиля должно быть = 1
+    expect(await tollTicket.balanceOf(vehicleAccount.address)).to.be.equal(1);
+
+    // Идентификатор токена билета автомобиля должен соответствовать ранее выпущенному.
     const vehicleTokenAt0 = await tollTicket.tokenOfOwnerByIndex(
-      vehicleAddress,
+      vehicleAccount.address,
       0,
     );
     expect(vehicleTokenAt0).to.be.equal(tokenId);

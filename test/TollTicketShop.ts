@@ -1,65 +1,87 @@
+/**
+ * @file Тесты и примеры использования магазина NFT билетов за проезд.
+ *
+ * @author Искандаров Эдуард
+ */
 import { ethers } from "hardhat";
-import { signERC2612Permit } from "eth-permit";
 import { expect } from "chai";
+import { signERC2612Permit } from "eth-permit";
 
 describe("TollTicketShop", () => {
-  it("should allow purchasing toll ticket", async () => {
-    const [rubxTokenOwner, tollPassOwner, tollPassShopOwner, alice] =
+  it("should allow vehicle to purchase toll ticket", async () => {
+    /**
+     * Определим блокчейн аккаунты для цифровых двойников
+     * - Центробанк(ЦБР)
+     * - авторизованный аккаунт для выпуска билетов
+     * - аккаунт магазина билетов
+     * - автомобиль
+     */
+    const [cbrAccount, tollTicketAccount, tollTicketShopOwner, vehicleAccount] =
       await ethers.getSigners();
 
+    // Разместим в тестовую сеть смарт контракт `RUBXToken`.
     const RUBXToken = await ethers.getContractFactory("RUBXToken");
-    const rubxToken = await RUBXToken.connect(rubxTokenOwner).deploy(
-      100_000_00,
+    const rubxToken = await RUBXToken.connect(cbrAccount).deploy(
+      100_000_00, // Эмиссия 100 тыс. рублей
     );
 
+    // Разместим в тестовую сеть смарт контракт `TollTicket`.
     const TollTicket = await ethers.getContractFactory("TollTicket");
-    const tollTicket = await TollTicket.connect(tollPassOwner).deploy();
+    const tollTicket = await TollTicket.connect(tollTicketAccount).deploy();
 
+    // Разместим в тестовую сеть смарт контракт `TollTicketShop`.
     const TollTicketShop = await ethers.getContractFactory("TollTicketShop");
-    const tollTicketShop = await TollTicketShop.connect(tollPassShopOwner).deploy(
-      rubxToken.address,
-      tollTicket.address,
-    );
+    const tollTicketShop = await TollTicketShop.connect(
+      tollTicketShopOwner,
+    ).deploy(rubxToken.address, tollTicket.address);
 
-    // Transfer 10 000 RUBX to Alice
-    await rubxToken.transfer(alice.address, 10_000_00);
+    // Для целей тестирования, передадим 10 тыс. рублей на аккаунт автомобиля.
+    await rubxToken.transfer(vehicleAccount.address, 10_000_00);
 
-    const tollPassPrice = 200_00;
-    // Alice generates permit signature to allow toll pass shot spend her tokens
+    // Установим стоимость билета в 200 рублей.
+    const tollTicketPrice = 200_00;
+
+    // Процесс покупки билета автомобилем.
+    // Для того, чтобы смарт контракт магазина смог получить оплату за билет,
+    // покупатель должен сформировать цифровую подпись на отправку токенов цифрового рубля.
     const permit = await signERC2612Permit(
       ethers.provider,
       rubxToken.address,
-      alice.address,
+      vehicleAccount.address,
       tollTicketShop.address,
-      tollPassPrice,
+      tollTicketPrice,
     );
 
-    expect(permit).not.to.be.undefined;
-
+    // Автомобиль покупает билет за проезд в магазине.
     const purchaseResult = await tollTicketShop
-      .connect(alice)
+      .connect(vehicleAccount)
       .purchaseTollTicket(
-        alice.address,
+        vehicleAccount.address,
         tollTicketShop.address,
-        tollPassPrice,
+        tollTicketPrice,
         permit.deadline,
         permit.v,
         permit.r,
         permit.s,
       );
-    expect(purchaseResult).not.to.be.undefined;
 
-    // Alice spent tokens for toll pass
-    expect(await rubxToken.balanceOf(alice.address)).to.be.equal(9_800_00);
+    // Проверим, что в блокчейн сохранилось соответствие адреса аккаунта автомобиля для токена билета.
+    const { value: tollTicketTokenId } = purchaseResult;
+    expect(await tollTicket.ownerOf(tollTicketTokenId)).to.be.equal(
+      vehicleAccount.address,
+    );
 
-    // Shop received tokens
-    expect(await rubxToken.balanceOf(tollTicketShop.address)).to.be.equal(200_00);
+    // Убедимся, что баланс аккаунта автомобиля уменьшился на стоимость билета.
+    expect(await rubxToken.balanceOf(vehicleAccount.address)).to.be.equal(
+      9_800_00,
+    );
 
-    // Check toll pass exists on Alice's account
-    expect(await tollTicket.balanceOf(alice.address)).to.be.equal(1);
+    // Баланс аккаунта магазина увеличился на стоимость билета.
+    expect(await rubxToken.balanceOf(tollTicketShop.address)).to.be.equal(
+      200_00,
+    );
 
-    // We checked that toll pass contract has registered the token for Alice
-    const { value: tollPassTokenId } = purchaseResult;
-    expect(await tollTicket.ownerOf(tollPassTokenId)).to.be.equal(alice.address);
+    // Дополнительно проверим, что количество NFT в контракте билетов у аккаунта автомобиля = 1.
+    expect(await tollTicket.balanceOf(vehicleAccount.address)).to.be.equal(1);
   });
 });

@@ -1,3 +1,13 @@
+/**
+ * @file NFT смарт контракт(ERC721) билетов на платную дорогу.
+ * Смарт контракт сгенерирован с использованием OpenZeppelin Contracts Wizard.
+ * 
+ * @see https://docs.openzeppelin.com/contracts/4.x/erc721
+ * @see https://wizard.openzeppelin.com/#erc721
+ * @see https://ethereum.org/en/developers/docs/standards/tokens/erc-721/
+ * 
+ * @author Искандаров Эдуард
+ */
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
@@ -11,10 +21,18 @@ contract TollTicket is ERC721, ERC721Enumerable {
 
   constructor() ERC721("TollTicket", "TTK") {}
 
+  /**
+   * Определяем базовой URL для ссылки метаданных.
+   */
   function _baseURI() internal pure override returns (string memory) {
-    return "https://nft.goznak.ru/metadata/";
+    return "https://nft.goznak.ru/toll-ticket/metadata/";
   }
 
+  /**
+   * Отправляет токен билета на автомобиль.
+   * 
+   * @param vehicle - Крипто адрес автомобиля покупателя
+   */
   function sendTicket(address vehicle) public returns (uint256) {
     uint256 newTicketId = _tokenIds.current();
     _mint(vehicle, newTicketId);
@@ -22,8 +40,7 @@ contract TollTicket is ERC721, ERC721Enumerable {
     return newTicketId;
   }
 
-  // The following functions are overrides required by Solidity.
-  // @see https://docs.openzeppelin.com/contracts/4.x/wizard
+  // Функции `_beforeTokenTransfer` и `supportsInterface` нужны для имплементации `ERC721Enumerable`.
 
   function _beforeTokenTransfer(
     address from,

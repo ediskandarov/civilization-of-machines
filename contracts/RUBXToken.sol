@@ -1,3 +1,16 @@
+/**
+ * @file Токен смарт контракт(ERC20) цифрового рубля.
+ * Смарт контракт сгенерирован с использованием OpenZeppelin Contracts Wizard.
+ * Из особенностей - использование EIP-2612 для оплаты в одну транзакцию.
+ * 
+ * @see https://docs.openzeppelin.com/contracts/4.x/erc20
+ * @see https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#ERC20Permit
+ * @see https://wizard.openzeppelin.com/#erc20
+ * @see https://ethereum.org/en/developers/docs/standards/tokens/erc-20/
+ * @see https://eips.ethereum.org/EIPS/eip-2612
+ * 
+ * @author Искандаров Эдуард
+ */
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
@@ -15,8 +28,8 @@ contract RUBXToken is ERC20, ERC20Permit {
   }
 
   /*
-   * RUB exponent is 2, allow 2 decimal fields to represent kopeck.
-   * 1 RUB = 100 kopeck.
+   * Рубль делится на 100 копеек. Токен хранит значения в наименьшем номинале.
+   * 1 РУБ = 100 копеек, экспонента рубля = 2.
    */
   function decimals() public view virtual override returns (uint8) {
     return 2;

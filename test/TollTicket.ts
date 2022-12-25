@@ -39,7 +39,7 @@ describe("TollTicket", () => {
 
     // Test metadata URI
     expect(await tollTicket.tokenURI(tokenId)).to.be.equal(
-      `https://nft.goznak.ru/metadata/${tokenId.toString()}`,
+      `https://nft.goznak.ru/toll-ticket/metadata/${tokenId.toString()}`,
     );
 
     // Test enumerable extension

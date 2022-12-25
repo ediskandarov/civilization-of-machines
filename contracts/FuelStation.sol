@@ -74,7 +74,7 @@ contract FuelStation is ERC1155Holder {
     // Проверка соответствия адреса АЗС и адреса смарт контракта в цифровой подписи.
     require(
       station == address(this),
-      "`shop` should be fuel station contract address"
+      "`station` should be fuel station contract address"
     );
 
     // Разрешение покупателем на перевод докенов цифрового рубля для покупки.
@@ -82,7 +82,7 @@ contract FuelStation is ERC1155Holder {
     _rubxToken.permit(vehicle, station, value, deadline, v, r, s);
 
     // После разрешения, смарт контракт АЗС может перевести себе токены
-    // цифрового рубля в качестве оплаты топлива..
+    // цифрового рубля в качестве оплаты топлива.
     _rubxToken.transferFrom(vehicle, station, value);
 
     // Расчет стоимости топлива.

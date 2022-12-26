@@ -1,22 +1,40 @@
 # civilization-of-machines
 
-## Обзор
+Проект для стартап акселератора Гознак.
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+Демонстрация возможностей использования смарт контрактов для взаимодействия цифровых двойников.
 
-Try running some of the following tasks:
+## Структура проекта
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
-```
-
-Документ с управлением проекта по ссылке [Project management](./docs/project-management.md)
+- `contracts/` - Директория со смарт контрактами
+- `docs/` - Директория с сопроводительной документацией
+  - [`application-form.md`](./docs/application-form.md) - Документ с заполненными полями для заявки
+  - [`presentation.md`](./docs/presentation.md) - Презентация проекта
+  - [`project-management.md`](./docs/project-management.md) - Документ с управлением проекта
+  - [`sequence-diagrams.md`](./docs/sequence-diagrams.md) - Диаграммы для презентации
+- `test/` - Директория с тестовыми сценариями и примерами использования смарт контрактов
 
 ## Установка
+
+### [fnm](https://github.com/Schniz/fnm)
+
+Следуйте инструкциям установки `fnm`.
+
+### npm
+
+Активируйте `Node.js` окружение командой
+
+```console
+$ fnm use
+```
+
+Далее установка npm пакетов
+
+```console
+$ npm install
+```
+
+### Подготовка окружения [VSCode](https://code.visualstudio.com/)
 
 Для работы в репозитории нужно установить следующие плагины для редактора VSCode
 
@@ -26,13 +44,22 @@ npx hardhat run scripts/deploy.ts
 - [Solidity](https://marketplace.visualstudio.com/items?itemName=NomicFoundation.hardhat-solidity)
 - [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
 
-## Useful links
+## Использование
 
-- [Deploying ENS on a Private Chain](https://docs.ens.domains/deploying-ens-on-a-private-chain)
-- [The Convergence Ecosystem in Mobility](https://outlierventures.io/wp-content/uploads/2019/05/ov0382convergenceinmobilitys1-180911161035.pdf)
-- [Автомобиль, Интернет вещей и прочие технологии](https://habr.com/ru/company/unet/blog/371207/)
-- [Что такое «умные» дороги и как будет выглядеть цифровой транспорт](https://trends.rbc.ru/trends/industry/5ef0c7849a7947bad518dfb5)
-- [NFTs, blockchain, AI, drones and autonomous vehicles key to more resilient supply chains](https://www.rmit.edu.au/news/all-news/2022/may/digital-cbd-report-3)
-- [Spend ERC-20 Create ERC-721](https://github.com/fulldecent/spend-ERC20-create-ERC721)
-- [Is this possible to pay for ERC721 token with ERC20 token not ETH?](https://ethereum.stackexchange.com/questions/112301/is-this-possible-to-pay-for-erc721-token-with-erc20-token-not-eth)
-- [A Long Way To Go: On Gasless Tokens and ERC20-Permit](https://soliditydeveloper.com/erc20-permit)
+### Компиляция смарт контрактов
+
+```console
+$ npx hardhat compile
+```
+
+### Запуск тестов
+
+```console
+$ npx hardhat test
+```
+
+### Сгенерировать pdf презентацию
+
+```console
+$ npx marp docs/presentation.md --pdf
+```
